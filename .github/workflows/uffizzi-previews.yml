@@ -1,0 +1,42 @@
+on:
+  push:
+    branches:
+      - main
+      - master
+      - qa
+  pull_request:
+    types: [opened, reopened, synchronize, closed]
+
+jobs:
+  render-compose-file:
+    name: Render Docker Compose File
+    runs-on: ubuntu-latest
+    outputs:
+      compose-file-cache-key: ${{ steps.hash.outputs.hash }}
+      compose-file-cache-path: docker-compose.map-envs.gha.yml
+    steps:
+      - name: Checkout git repo
+        uses: actions/checkout@v3
+      - name: Hash Rendered Compose File
+        id: hash
+        run: echo "::set-output name=hash::$(md5sum docker-compose.map-envs.gha.yml | awk '{ print $1 }')"
+      - name: Cache Rendered Compose File
+        uses: actions/cache@v3
+        with:
+          path: docker-compose.map-envs.gha.yml
+          key: ${{ steps.hash.outputs.hash }}
+
+  deploy-uffizzi-preview:
+    name: Use Remote Workflow to Preview on Uffizzi
+    needs:
+      - render-compose-file
+    uses: UffizziCloud/preview-action/.github/workflows/reusable.yaml@v2
+    if: ${{ github.event_name == 'pull_request' && github.event.action != 'closed' }}
+    with:
+      compose-file-cache-key: ${{ needs.render-compose-file.outputs.compose-file-cache-key }}
+      compose-file-cache-path: docker-compose.map-envs.gha.yml
+      server: https://33c5-80-72-94-125.ngrok.io
+    permissions:
+      contents: read
+      pull-requests: write
+      id-token: write
