@@ -21,9 +21,10 @@ jobs:
         id: meta
         uses: docker/metadata-action@v3
         with:
-          images: ttl.sh/${{ steps.uuid.outputs.uuid }}
+          # An anonymous, emphemeral registry built on ttl.sh
+          images: ephemeron.uffizzi.com/${{ steps.uuid.outputs.uuid }}
           tags: type=raw,value=24h
-      - name: Build and Push Image to GitHub Container Registry
+      - name: Build and Push Image to Uffizzi Ephemeral Registry
         uses: docker/build-push-action@v2
         with:
           push: true
