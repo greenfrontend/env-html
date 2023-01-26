@@ -1,5 +1,5 @@
 build:
-	docker build -t ttl.sh/test-node-greenfrontend:12h .
+	docker build -t ttl.sh/greenfrontend-env-var-367:12h .
 
 push:
-	docker push ttl.sh/test-node-greenfrontend:12h
+	docker push ttl.sh/greenfrontend-env-var-367:12h
