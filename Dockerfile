@@ -1,4 +1,4 @@
-FROM node:latest
+FROM node:18-alpine
 
 ARG RAILS_ROOT=/app
 RUN mkdir -p $RAILS_ROOT
