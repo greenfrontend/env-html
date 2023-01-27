@@ -2,7 +2,7 @@ version: '3'
 
 services:
   app:
-    image: greenfrontend/test-env:v1
+    image: ghcr.io/greenfrontend/app:1.0.0
     entrypoint: /bin/sh
     command:
       - "-c"
